@@ -5,10 +5,11 @@ Requires=docker.service
 
 [Service]
 EnvironmentFile=/etc/environment
+ExecStartPre=-/usr/bin/docker pull ncarlier/dynamic-ambassador
 ExecStartPre=-/usr/bin/docker kill %p
 ExecStartPre=-/usr/bin/docker rm %p
 ExecStart=/usr/bin/docker run --rm --name %p -h %p-%i \
-    -e ETCD_HOST=172.17.42.1:4001 \
+    -e ETCD_HOST=${COREOS_PRIVATE_IPV4}:4001 \
     -p 80:80 \
     ncarlier/dynamic-ambassador
 ExecStop=/usr/bin/docker stop %p
