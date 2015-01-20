@@ -1,4 +1,4 @@
-# Nginx docker image.
+# Dynamic ambassador
 #
 # VERSION 0.0.1
 
@@ -14,7 +14,7 @@ RUN sed -i 's/^ENABLED=.*/ENABLED=1/' /etc/default/haproxy
 
 # Install confd
 ENV CONFD_URL https://github.com/kelseyhightower/confd/releases/download/v0.7.1/confd-v0.7.1-linux-amd64
-RUN (curl -L -o /usr/local/bin/confd $BTSYNC_URL && chmod +x /usr/local/bin/confd)
+RUN (curl -L -o /usr/local/bin/confd $CONFD_URL && chmod +x /usr/local/bin/confd)
 
 # Install startup script
 ADD entrypoint.sh /usr/local/bin/entrypoint

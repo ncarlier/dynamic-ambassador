@@ -1,4 +1,6 @@
-haproxy combined with confd for HTTP load balancing
+# Dynamic Ambassador
+
+Dynamic ambassador pattern based on etcd, confd and haproxy.
 
 Start the container making sure to expose port 80 on the host machine
 
