@@ -13,7 +13,7 @@ RUN apt-get update && apt-get install -y haproxy curl && apt-get clean
 RUN sed -i 's/^ENABLED=.*/ENABLED=1/' /etc/default/haproxy
 
 # Install confd
-ENV CONFD_URL https://github.com/kelseyhightower/confd/releases/download/v0.7.1/confd-v0.7.1-linux-amd64
+ENV CONFD_URL https://github.com/kelseyhightower/confd/releases/download/v0.7.1/confd-0.7.1-linux-amd64
 RUN (curl -L -o /usr/local/bin/confd $CONFD_URL && chmod +x /usr/local/bin/confd)
 
 # Install startup script
