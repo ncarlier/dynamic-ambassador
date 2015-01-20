@@ -1,6 +1,7 @@
 [template]
 keys = [
-  "services"
+  "services",
+  "domains"
 ]
 
 owner = "haproxy"
@@ -8,6 +9,6 @@ mode = "0644"
 src = "haproxy.tmpl"
 dest = "/etc/haproxy/haproxy.cfg"
 
-check_cmd = "/usr/sbin/haproxy -c -f {{ .src }}"
+#check_cmd = "/usr/sbin/haproxy -c -f {{ .src }}"
 reload_cmd = "haproxy -f /etc/haproxy/haproxy.cfg -p /var/run/haproxy.pid -D -sf $(cat /var/run/haproxy.pid)"
 

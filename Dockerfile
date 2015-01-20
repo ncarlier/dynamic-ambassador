@@ -23,7 +23,7 @@ ADD entrypoint.sh /usr/local/bin/entrypoint
 ADD confd /etc/confd
 
 # Setup etcd ip/port
-ENV ETCD_NODE 171.17.42.1:4001
+ENV ETCD_HOST 171.17.0.1:4001
 
 # Expose ports
 EXPOSE 80
