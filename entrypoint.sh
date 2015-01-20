@@ -21,7 +21,7 @@ function config_fail()
 
 # Loop until confd has updated the haproxy config
 n=0
-until confd -onetime -node "$ETCD_NODE"; do
+until confd -onetime -node "$ETCD_HOST"; do
   if [ "$n" -eq "4" ];  then config_fail; fi
   echo "[dynamic-ambassador] waiting for confd to refresh haproxy.cfg"
   n=$((n+1))
@@ -30,4 +30,4 @@ done
 
 echo "[dynamic-ambassador] initial HAProxy config created: starting confd"
 
-confd -node "$ETCD_NODE"
+confd -node "$ETCD_HOST"
