@@ -6,7 +6,6 @@ APPNAME:=dynamic-ambassador
 IMAGE:=$(USERNAME)/$(APPNAME)
 
 define docker_run_flags
--e ETCD_HOST=172.17.42.1:4001 \
 -p 80:80
 endef
 
