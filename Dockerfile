@@ -9,8 +9,8 @@ MAINTAINER Nicolas Carlier <https://github.com/ncarlier>
 ENV DEBIAN_FRONTEND noninteractive
 
 # Install haproxy.
-RUN apt-get update && apt-get install -y supervisor rsyslog haproxy curl inotify-tools && apt-get clean
-ADD minimal.cfg /etc/haproxy/haproxy.cfg
+RUN apt-get update && apt-get install -y supervisor rsyslog haproxy curl && apt-get clean
+ADD default.cfg /etc/haproxy/default.cfg
 
 # Install confd
 ENV CONFD_URL https://github.com/kelseyhightower/confd/releases/download/v0.7.1/confd-0.7.1-linux-amd64

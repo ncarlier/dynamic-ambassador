@@ -1,11 +1,12 @@
 [template]
 keys = [
   "services",
-  "domains"
+  "applications"
 ]
 
 owner = "haproxy"
 mode = "0644"
 src = "haproxy.tmpl"
-dest = "/etc/haproxy/haproxy.cfg"
+dest = "/etc/haproxy/confd.cfg"
 
+reload_cmd = "supervisorctl restart haproxy"

@@ -1,68 +1,29 @@
-global
-    log 127.0.0.1   local0
-    log 127.0.0.1   local1 notice
-    pidfile /var/run/haproxy.pid
-    maxconn 128000
-    user haproxy
-    group haproxy
-
-defaults
-    log    global
-    option log-health-checks
-    # make sure log-format is on a single line
-    log-format {"type":"haproxy","timestamp":%Ts,"http_status":%ST,"http_request":"%r","remote_addr":"%ci","bytes_read":%B,"upstream_addr":"%si","backend_name":"%b","retries":%rc,"bytes_uploaded":%U,"upstream_response_time":"%Tr","upstream_connect_time":"%Tc","session_duration":"%Tt","termination_state":"%ts"}
-    mode   http
-    option httplog
-    option dontlognull
-    option forwardfor
-    option http-keep-alive
-    option http-tunnel
-    timeout connect 5000
-    timeout client 50000
-    timeout server 50000
-    errorfile 400 /etc/haproxy/errors/400.http
-    errorfile 403 /etc/haproxy/errors/403.http
-    errorfile 408 /etc/haproxy/errors/408.http
-    errorfile 500 /etc/haproxy/errors/500.http
-    errorfile 502 /etc/haproxy/errors/502.http
-    errorfile 503 /etc/haproxy/errors/503.http
-    errorfile 504 /etc/haproxy/errors/504.http
-
-# HTTP frontend
+# HTTP applications
 frontend http-in
     bind *:80
-    # Allow registred domains
-{{range $service := ls "/services"}}
-{{$key := printf "/domains/%s" $service}}  {{if exists $key}}
-    acl host_{{$service}} hdr(host) -i {{getv $key}}
-{{end}}
-{{end}}
-
-    # Use registered backends
-{{range $service := ls "/services"}}
-{{$key := printf "/domains/%s" $service}}  {{if exists $key}}
-    use_backend {{$service}} if host_{{$service}}
-{{end}}
+    # Register domains
+{{range $domain := ls "/applications"}}
+    acl host_{{$domain}} hdr(host) -i {{$domain}}
+    use_backend {{$domain}} if host_{{$domain}}
 {{end}}
 
 # Register HTTP backends
-{{range $service := ls "/services"}}
-{{$key := printf "/domains/%s" $service}}  {{if exists $key}}
-backend {{$service}}
+{{range $domain := ls "/applications"}}
+backend {{$domain}}
     balance leastconn
-    {{range $index, $upstream := ls (printf "/services/%s" $service)}}
-    server {{$service}}-{{$index}} {{printf "/services/%s/%s" $service $upstream | getv}} check
+    {{range $upstream := ls (printf "/applications/%s" $domain)}}
+    server {{$upstream}} {{printf "/applications/%s/%s" $domain $upstream | getv}} check
     {{end}}
 {{end}}
+
+# TCP services
+{{range $name := ls "/services"}}
+{{range $port := ls (printf "/services/%s" $name)}}
+listen {{$name}}_{{$port}}
+  mode tcp
+  bind {{$port}}
+  {{range $upstream := ls (printf "/services/%s/%s" $name $port)}}
+  server {{$upstream}} {{printf "/services/%s/%s/%s" $name $port $upstream | getv}} check
+  {{end}}
 {{end}}
-
-listen MyStats
-    mode http
-    bind 0.0.0.0:8080
-    stats enable
-    stats uri /
-    acl auth_ok http_auth(stats-auth)
-    http-request auth unless auth_ok
-
-userlist stats-auth
-    user admin insecure-password p4ss
+{{end}}
