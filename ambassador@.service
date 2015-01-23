@@ -9,7 +9,9 @@ ExecStartPre=-/usr/bin/docker pull ncarlier/dynamic-ambassador
 ExecStartPre=-/usr/bin/docker kill %p
 ExecStartPre=-/usr/bin/docker rm %p
 ExecStart=/usr/bin/docker run --rm --name %p -h %p-%i \
+    -v /var/run/docker.sock:/var/run/docker.sock \
     -e ETCD_HOST=${COREOS_PRIVATE_IPV4}:4001 \
+    -e HOST_IP=${COREOS_PRIVATE_IPV4} \
     -p 80:80 \
     ncarlier/dynamic-ambassador
 ExecStop=/usr/bin/docker stop %p

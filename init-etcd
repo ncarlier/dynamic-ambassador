@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# Create "services" and "applications" directories
+curl -L "${ETCD_HOST}/v2/keys/services?dir=true" -XPUT
+curl -L "${ETCD_HOST}/v2/keys/applications?dir=true" -XPUT
+
+exit 0

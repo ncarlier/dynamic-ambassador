@@ -1,14 +1,18 @@
+{{range $index, $domain := ls "/applications"}}
+{{if eq $index 0}}
 # HTTP applications
 frontend http-in
     bind *:80
     # Register domains
-{{range $domain := ls "/applications"}}
+{{end}}
     acl host_{{$domain}} hdr(host) -i {{$domain}}
     use_backend {{$domain}} if host_{{$domain}}
 {{end}}
 
+{{range $index, $domain := ls "/applications"}}
+{{if eq $index 0}}
 # Register HTTP backends
-{{range $domain := ls "/applications"}}
+{{end}}
 backend {{$domain}}
     balance leastconn
     {{range $upstream := ls (printf "/applications/%s" $domain)}}
@@ -16,8 +20,10 @@ backend {{$domain}}
     {{end}}
 {{end}}
 
+{{range $index, $name := ls "/services"}}
+{{if eq $index 0}}
 # TCP services
-{{range $name := ls "/services"}}
+{{end}}
 {{range $port := ls (printf "/services/%s" $name)}}
 listen {{$name}}_{{$port}}
   mode tcp
