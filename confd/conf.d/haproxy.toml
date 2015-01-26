@@ -1,7 +1,7 @@
 [template]
 keys = [
   "services",
-  "applications"
+  "apps"
 ]
 
 owner = "haproxy"

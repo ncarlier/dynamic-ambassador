@@ -1,6 +1,6 @@
-{{range $index, $domain := ls "/applications"}}
+{{range $index, $domain := ls "/apps"}}
 {{if eq $index 0}}
-# HTTP applications
+# HTTP apps
 frontend http-in
     bind *:80
     # Register domains
@@ -9,14 +9,17 @@ frontend http-in
     use_backend {{$domain}} if host_{{$domain}}
 {{end}}
 
-{{range $index, $domain := ls "/applications"}}
+{{range $index, $domain := ls "/apps"}}
 {{if eq $index 0}}
 # Register HTTP backends
 {{end}}
 backend {{$domain}}
     balance leastconn
-    {{range $upstream := ls (printf "/applications/%s" $domain)}}
-    server {{$upstream}} {{printf "/applications/%s/%s" $domain $upstream | getv}} check
+    option forwardfor
+    http-request set-header X-Forwarded-Port %[dst_port]
+    option httpchk HEAD / HTTP/1.1\r\nHost:{{$domain}}
+    {{range $upstream := ls (printf "/apps/%s" $domain)}}
+    server {{$upstream}} {{printf "/apps/%s/%s" $domain $upstream | getv}} check
     {{end}}
 {{end}}
 
@@ -27,7 +30,7 @@ backend {{$domain}}
 {{range $port := ls (printf "/services/%s" $name)}}
 listen {{$name}}_{{$port}}
   mode tcp
-  bind {{$port}}
+  bind *:{{$port}}
   {{range $upstream := ls (printf "/services/%s/%s" $name $port)}}
   server {{$upstream}} {{printf "/services/%s/%s/%s" $name $port $upstream | getv}} check
   {{end}}

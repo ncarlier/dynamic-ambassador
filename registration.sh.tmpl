@@ -10,14 +10,14 @@ function error {
 
 {{ $local := . }}
 
-# Registering applications...
+# Registering apps...
 {{ range $domain, $containers := groupByMulti $ "Env.DOMAIN_NAME" "," }}
 log "Registering containers for the domain {{$domain}}..."
 {{ range $index, $value := $containers }}
 {{ $name := $value.Name }}
 {{ with $address := index $value.Addresses 0 }}
 {{ if $address.HostPort }}
-JSON=$(curl -sL "$ETCD_HOST/v2/keys/applications/{{$domain}}/{{$value.ID}}" -XPUT -d value="{{$local.Env.HOST_IP}}:{{$address.HostPort}}" -d ttl=15 2>&1)
+JSON=$(curl -sL "$ETCD_HOST/v2/keys/apps/{{$domain}}/{{$value.ID}}" -XPUT -d value="{{$local.Env.HOST_IP}}:{{$address.HostPort}}" -d ttl=15 2>&1)
 if [ $? != 0 ]; then
     error "Error, unable to register container {{$name}} (#{{$value.ID}}): $JSON"
 else
