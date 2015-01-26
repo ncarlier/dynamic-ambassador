@@ -46,7 +46,7 @@ docker run --rm --name dynamic-ambassador -h dynamic-ambassador-1 \
   ncarlier/dynamic-ambassador
 ```
 
-On a single host you can also use `make run` to start the container.
+On a single host you can also use `make start` to start the container.
 With CoreOS you can use the provided unit file:
 
 ```bash
