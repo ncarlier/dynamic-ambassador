@@ -9,4 +9,4 @@ mode = "0644"
 src = "haproxy.tmpl"
 dest = "/etc/haproxy/confd.cfg"
 
-reload_cmd = "supervisorctl restart haproxy"
+reload_cmd = "service haproxy reload"

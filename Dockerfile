@@ -10,13 +10,14 @@ ENV DEBIAN_FRONTEND noninteractive
 
 # Install haproxy.
 RUN apt-get update && apt-get install -y supervisor rsyslog haproxy curl && apt-get clean
-ADD default.cfg /etc/haproxy/default.cfg
+ADD default.cfg /etc/haproxy/haproxy.cfg
+RUN echo "EXTRAOPTS=\"-f /etc/haproxy/confd.cfg\"" >> /etc/default/haproxy
 
 # Install confd
 ENV CONFD_URL https://github.com/kelseyhightower/confd/releases/download/v0.7.1/confd-0.7.1-linux-amd64
 RUN (curl -L -o /usr/local/bin/confd $CONFD_URL && chmod +x /usr/local/bin/confd)
 ADD confd /etc/confd
-ADD init-etcd /usr/local/bin/init-etcd
+ADD entrypoint /usr/local/bin/entrypoint
 
 # Install docker-gen
 ENV DOCKERGEN_URL https://github.com/jwilder/docker-gen/releases/download/0.3.3/docker-gen-linux-amd64-0.3.3.tar.gz
@@ -37,6 +38,5 @@ ENV DOCKER_HOST unix:///tmp/docker.sock
 EXPOSE 80
 EXPOSE 8080
 
-ENTRYPOINT  ["/usr/bin/supervisord"]
+ENTRYPOINT  ["/usr/local/bin/entrypoint"]
 
-CMD ["-n"]

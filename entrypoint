@@ -1,7 +1,8 @@
 #!/bin/bash
 
-# Create "services" and "apps" directories
+echo "Ensure that the  root keys are presents..."
 curl -L "${ETCD_HOST}/v2/keys/services?dir=true" -XPUT
 curl -L "${ETCD_HOST}/v2/keys/apps?dir=true" -XPUT
 
-exit 0
+echo "Starting supervisord..."
+supervisord -n
