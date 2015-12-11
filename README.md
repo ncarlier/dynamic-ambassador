@@ -1,5 +1,8 @@
 # Dynamic Ambassador
 
+[![Image size](https://img.shields.io/imagelayers/image-size/ncarlier/dynamic-ambassador/latest.svg)](https://hub.docker.com/r/ncarlier/dynamic-ambassador/)
+[![Docker pulls](https://img.shields.io/docker/pulls/ncarlier/dynamic-ambassador.svg)](https://hub.docker.com/r/ncarlier/dynamic-ambassador/)
+
 Dynamic [ambassador pattern](https://docs.docker.com/articles/ambassador_pattern_linking/) based on etcd,
 confd, docker-gen and haproxy. This ambassador can be run on a single host but it' designed to be run on
 a Docker cluster (like [CoreOS](https://coreos.com/) or [Docker Swarm](https://github.com/docker/swarm))
